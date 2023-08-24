@@ -24,8 +24,7 @@ import static java.lang.Class.forName;
 //http://localhost:8080/pos_one/pages/customer//
 //http:://localhost:8080/pos_one/pages/customer
 //http:://localhost:8080/pos_one/pages/customer
-
-@WebServlet(urlPatterns = {"/pages/customer"})
+@WebServlet(urlPatterns = "/pages/customer")
 public class CustomerServlet extends HttpServlet {
 
     @Override

@@ -64,7 +64,6 @@ public class ItemServlet extends HttpServlet {
                     }
                     resp.setContentType("application/json");
                     resp.getWriter().print(arrayBuilder2.build());
-
                     break;
             }
 
@@ -88,7 +87,6 @@ public class ItemServlet extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
 
        // System.out.println(code+" "+itemName+" "+qty+" "+unitPrice+" ");
-//
         try {
             forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shop", "root", "1234");
