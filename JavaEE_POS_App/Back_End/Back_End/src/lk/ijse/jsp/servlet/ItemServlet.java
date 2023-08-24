@@ -87,7 +87,7 @@ public class ItemServlet extends HttpServlet {
         String option = req.getParameter("option");
         resp.addHeader("Access-Control-Allow-Origin", "*");
 
-        System.out.println(code+" "+itemName+" "+qty+" "+unitPrice+" ");
+       // System.out.println(code+" "+itemName+" "+qty+" "+unitPrice+" ");
 //
         try {
             forName("com.mysql.jdbc.Driver");
@@ -98,7 +98,7 @@ public class ItemServlet extends HttpServlet {
                     pstm.setObject(2, itemName);
                     pstm.setObject(3, qty);
                     pstm.setObject(4, unitPrice);
-            System.out.println("sql"+pstm);
+                    System.out.println("sql"+pstm);
                     if (pstm.executeUpdate() > 0) {
                         // resp.getWriter().println("Item Added..!");
                         JsonObjectBuilder objectBuilder = Json.createObjectBuilder();

@@ -68,7 +68,7 @@ public class CustomerServlet extends HttpServlet {
                     ResultSet rst2 = pstm2.executeQuery();
                     resp.addHeader("Access-Control-Allow-Origin", "*");
 
-                    System.out.println("GetIds"+pstm2);
+                    //System.out.println("GetIds"+pstm2);
 
                     JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
                     while (rst2.next()) {

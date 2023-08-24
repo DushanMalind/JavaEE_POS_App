@@ -77,7 +77,7 @@
                   id="btnUpdate">Update
           </button>
           <button type="button" formaction="customer" class="btn btn-success" id="btnGetAll">Get All</button>
-          <button formaction="/pos_one" class="btn btn-danger" id="btn-clear1">Clear All</button>
+          <button type="button" class="btn btn-danger" id="btn-clear1">Clear All</button>
         </div>
       </form>
     </div>
@@ -149,6 +149,19 @@
   }
 
 
+  function clearData(){
+    //$("#txtCustomerID").val("");
+    $("#txtCustomerName").val("");
+    $("#txtCustomerAddress").val("");
+    $("#txtCustomerSalary").val("");
+
+  }
+
+  $("#btn-clear1").click(function (){
+    clearData();
+  });
+
+
 
   $("#btnGetAll").click(function () {
     generateCustomerId();
@@ -165,6 +178,7 @@
 
       success: function (resp) {
         getAllCustomer();
+        clearData();
         alert(resp.message);
       },
       error: function (error) {
@@ -291,18 +305,29 @@
     });
   });
 
-  function bindClickEvent() {
 
-    $("#tblCustomer>tr").on('click', function () {
-      let id = $(this).children().eq(0).text();
+
+
+
+    $("#tblCustomer").on('click', function (event) {
+      /*let id = $(this).children().eq(0).text();
       let name = $(this).children().eq(1).text();
       let address = $(this).children().eq(2).text();
-      let contact = $(this).children().eq(3).text();
+      let contact = $(this).children().eq(3).text();*/
+
+      let tr = event.target.closest("tr");
+
+      let id=tr.cells[0].textContent;
+      let name=tr.cells[1].textContent;
+      let address=tr.cells[2].textContent;
+      let contact=tr.cells[3].textContent;
 
       // Call the updated setFiledSet function to populate the form fields
       setFiledSet(id, name, address, contact);
+      console.log(id, name, address, contact);
     });
-  }
+
+
 
   // Modify the setFiledSet function to populate the form fields
   function setFiledSet(id, name, address, contact) {
@@ -310,7 +335,7 @@
     $("#txtCustomerName").val(name);
     $("#txtCustomerAddress").val(address);
     $("#txtCustomerSalary").val(contact);
-    bindClickEvent(); // Re-bind the click event after updating the fields
+    // Re-bind the click event after updating the fields
   }
 
 

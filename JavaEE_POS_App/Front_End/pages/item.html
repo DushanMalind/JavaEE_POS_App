@@ -140,7 +140,16 @@
     generateNewIdItem();
   });
 
+function clearAll(){
+  //  $("#itemCode").val("");
+  $("#itemName").val("");
+  $("#itemQty").val("");
+  $("#itemPrice").val("");
+}
 
+  $("#btn-clear").click(function () {
+    clearAll();
+  });
 
 
   $("#btnItem").click(function () {
@@ -153,6 +162,7 @@
 
       success: function (data) {
         getAllItems();
+        clearAll();
         alert(data.message);
       },
       error: function (data) {
@@ -209,6 +219,44 @@
     });
   });
 
+
+  $("#tblItem").click(function () {
+
+    let tr = event.target.closest("tr");
+
+    let code=tr.cells[0].textContent;
+    let description=tr.cells[1].textContent;
+    let qty=tr.cells[2].textContent;
+    let unitPrice=tr.cells[3].textContent;
+
+    $("#itemCode").val(code);
+    $("#itemName").val(description);
+    $("#itemQty").val(qty);
+    $("#itemPrice").val(unitPrice);
+  });
+
+
+
+ /* function bindClickEventItem(){
+    $("#tblItem").click(function () {
+      tbalCustomerRow=$(this).find("tr");
+
+      var id=$(this).find("td:first-child").text();
+      var name=$(this).find("td:nth-child(2)").text();
+      var qty=$(this).find("td:nth-child(3)").text();
+      var price=$(this).find("td:nth-child(4)").text();
+
+
+
+      $("#itemCode").val(id);
+      $("#itemName").val(name);
+      $("#itemQty").val(qty);
+      $("#itemPrice").val(price);
+
+
+    });
+  }
+*/
 
 </script>
 </body>
