@@ -1,19 +1,18 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Item Manage</title>
-    <meta content="width=device-width initial-scale=1" name="viewport">
-    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../assets/css/styles.css" rel="stylesheet">
-    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
-          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" rel="stylesheet">
-    <style>
-        ul > li {
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Item Manage</title>
+  <meta content="width=device-width initial-scale=1" name="viewport">
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/css/styles.css" rel="stylesheet">
+  <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+        integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" rel="stylesheet">
+  <style>
+    ul > li {
+      cursor: pointer;
+    }
+  </style>
 
 </head>
 <body>
@@ -31,75 +30,79 @@
 
 <!--item content-->
 <main class="container-fluid" id="itemContent">
-    <section class="row">
-        <div class="col-12 col-lg-4">
-            <h1>Item Form</h1>
-            <form id="ItemFromData">
-            <div class="form-group">
-                <label for="itemCode">Item Code</label>
-                <input name="code" class="form-control" id="itemCode" type="text">
-                <span class="control-error" id="lblCode"></span>
-            </div>
-            <div class="form-group">
-                <label for="itemName">Item Name</label>
-                <input name="description" class="form-control" id="itemName" type="text">
-                <span class="control-error" id="lblname"></span>
-            </div>
-            <div class="form-group">
-                <label for="itemQty">Item Qty</label>
-                <input name="qty" class="form-control" id="itemQty" type="text">
-                <span class="control-error" id="lblqty"></span>
-            </div>
-            <div class="form-group">
-                <label for="itemPrice">Unit Price</label>
-                <input name="unitPrice" class="form-control" id="itemPrice" type="text">
-                <span class="control-error" id="lblprice"></span>
-            </div>
-            </form>
-            <div class="btn-group">
-                <button  formmethod="post"  formaction="item?option=add" class="btn btn-primary" id="btnItem">Add Item</button>
-                <button  formmethod="post"  formaction="item?option=delete" class="btn btn-danger" id="btnItemDelete">Remove</button>
-                <button  formmethod="post"  formaction="item?option=update" class="btn btn-warning" id="btnItemUpdate">Update</button>
-                <button type="button" id="GetAll" formaction="item" class="btn btn-success">Get All</button>
-                <button  type="reset" class="btn btn-danger" id="btn-clear">Clear All</button>
-            </div>
-
+  <section class="row">
+    <div class="col-12 col-lg-4">
+      <h1>Item Form</h1>
+      <form id="ItemFromData">
+        <div class="form-group">
+          <label for="itemCode">Item Code</label>
+          <input name="code" class="form-control" id="itemCode" type="text">
+          <span class="control-error" id="lblCode"></span>
         </div>
-        <div class="col-12 col-lg-8 mt-3">
-            <table class="table table-bordered table-hover">
-                <thead class="bg-danger text-white">
-                <tr>
-                    <th>Item Code</th>
-                    <th>Item Name</th>
-                    <th>Item Qty</th>
-                    <th>Item Price</th>
-                </tr>
-                </thead>
-                <tbody id="tblItem">
-
-                </tbody>
-            </table>
+        <div class="form-group">
+          <label for="itemName">Item Name</label>
+          <input name="description" class="form-control" id="itemName" type="text">
+          <span class="control-error" id="lblname"></span>
         </div>
-    </section>
+        <div class="form-group">
+          <label for="itemPrice">Unit Price</label>
+          <input name="unitPrice" class="form-control" id="itemPrice" type="text">
+          <span class="control-error" id="lblprice"></span>
+        </div>
+        <div class="form-group">
+          <label for="itemQty">Item Qty</label>
+          <input name="qty" class="form-control" id="itemQty" type="text">
+          <span class="control-error" id="lblqty"></span>
+        </div>
+      </form>
+      <div class="btn-group">
+        <button  class="btn btn-primary" id="btnItem">Add Item</button>
+        <button type="button" class="btn btn-danger" id="btnItemDelete">Remove
+        </button>
+        <button type="button"  class="btn btn-warning" id="btnItemUpdate">Update
+        </button>
+        <button type="button" formaction="item" id="btnItemGetAll" class="btn btn-success">Get All</button>
+        <button type="reset" class="btn btn-danger" id="btn-clear">Clear All</button>
+      </div>
+
+    </div>
+    <div class="col-12 col-lg-8 mt-3">
+      <table class="table table-bordered table-hover">
+        <thead class="bg-danger text-white">
+        <tr>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Item Qty</th>
+          <th>Item Price</th>
+        </tr>
+        </thead>
+        <tbody id="tblItem">
+
+        </tbody>
+      </table>
+    </div>
+  </section>
 
 </main>
 <script src="../assets/js/jquery-3.6.1.min.js"></script>
 <script>
 
   getAllItems();
-  function getAllItems(){
+
+  function getAllItems() {
     /*$("#GetAll").click(function () {*/
     $("#tblItem").empty();
 
     $.ajax({
-      url:"http://localhost:8081/Jsonp9/pages/item",
-      success:function (data) {
+      url: "http://localhost:8081/Jsonp9/pages/item?option=getAll",
+      success: function (data) {
+        generateNewIdItem();
         for (let i = 0; i < data.length; i++) {
-          let code=data[i].code;
-          let description=data[i].description;
-          let qty=data[i].qty;
-          let unitPrice=data[i].unitPrice;
-          let tr=`<tr><td>${code}</td><td>${description}</td><td>${unitPrice}</td><td>${qty}</td></tr>`;
+          let code = data[i].code;
+          let description = data[i].description;
+          let qty = data[i].qty;
+          let unitPrice = data[i].unitPrice;
+          let tr = `<tr><td>${code}</td><td>${description}</td><td>${unitPrice}</td><td>${qty}</td></tr>`;
           $("#tblItem").append(tr);
         }
       },
@@ -107,19 +110,52 @@
     /*});*/
   }
 
+
+  function generateNewIdItem(){
+   $("#itemCode").val("I0-001");
+
+    $.ajax({
+      url: "http://localhost:8081/Jsonp9/pages/item?option=getNewId",
+      method: "GET",
+      success: function (resp) {
+       // $("#itemCode").val("I0-00"+resp);
+       var tempId=0
+
+        if (tempId <= 9) {
+          $("#itemCode").val("I0-00"+resp);
+        } else if (tempId <= 99) {
+          $("#itemCode").val("I0-0"+resp);
+        } else if (tempId <= 999) {
+          $("#itemCode").val("I0-"+resp);
+        }
+      },
+      error: function (ob, statusText, error) {
+      }
+
+    });
+  }
+
+
+  $("#btnItemGetAll").click(function (){
+    generateNewIdItem();
+  });
+
+
+
+
   $("#btnItem").click(function () {
     let formData1 = $("#ItemFromData").serialize();
 
     $.ajax({
-      url:"http://localhost:8081/Jsonp9/pages/item",
-      method:"POST",
-      data:formData1,
+      url: "http://localhost:8081/Jsonp9/pages/item",
+      method: "POST",
+      data: formData1,
 
-      success:function(data){
+      success: function (data) {
         getAllItems();
         alert(data.message);
       },
-      error:function (data) {
+      error: function (data) {
         alert(data.responseJSON.message);
       }
 
@@ -129,29 +165,29 @@
 
   $("#btnItemUpdate").click(function () {
 
-    let code=$("#itemCode").val();
-    let description=$("#itemName").val();
-    let qty=$("#itemQty").val();
-    let unitPrice=$("#itemPrice").val();
+    let code = $("#itemCode").val();
+    let description = $("#itemName").val();
+    let qty = $("#itemQty").val();
+    let unitPrice = $("#itemPrice").val();
 
-    let itemData={
-      code:code,
-      description:description,
-      qty:qty,
-      unitPrice:unitPrice
+    let itemData = {
+      code: code,
+      description: description,
+      qty: qty,
+      unitPrice: unitPrice
     };
 
     $.ajax({
-      url:"http://localhost:8081/Jsonp9/pages/item",
-      method:"PUT",
+      url: "http://localhost:8081/Jsonp9/pages/item",
+      method: "PUT",
       contentType: "application/json",
       data: JSON.stringify(itemData),
 
-      success:function (data) {
+      success: function (data) {
         getAllItems();
         alert(data.message);
       },
-      error:function (data) {
+      error: function (data) {
         alert(data.responseJSON.message);
       }
     });
@@ -160,14 +196,14 @@
 
   $("#btnItemDelete").click(function () {
     $.ajax({
-      url:"http://localhost:8081/Jsonp9/pages/item?code="+$("#itemCode").val(),
-      method:"DELETE",
+      url: "http://localhost:8081/Jsonp9/pages/item?code=" + $("#itemCode").val(),
+      method: "DELETE",
 
-      success:function (data) {
+      success: function (data) {
         getAllItems();
         alert(data.message);
       },
-      error:function (data) {
+      error: function (data) {
         alert(data.responseJSON.message);
       }
     });

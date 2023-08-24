@@ -22,27 +22,51 @@ public class ItemServlet extends HttpServlet {
         try {
             forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shop", "root", "1234");
-            PreparedStatement pstm = connection.prepareStatement("select * from items");
-            ResultSet rst = pstm.executeQuery();
-            resp.addHeader("Access-Control-Allow-Origin", "*");
+
+            String option = req.getParameter("option");
+
+            switch (option){
+                case "getAll":
+                    PreparedStatement pstm = connection.prepareStatement("select * from items");
+                    ResultSet rst = pstm.executeQuery();
+                    resp.addHeader("Access-Control-Allow-Origin", "*");
 
 
-            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            while (rst.next()) {
-                String code = rst.getString(1);
-                String description = rst.getString(2);
-                String qty = rst.getString(3);
-                String unitPrice = rst.getString(4);
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                    while (rst.next()) {
+                        String code = rst.getString(1);
+                        String description = rst.getString(2);
+                        String qty = rst.getString(3);
+                        String unitPrice = rst.getString(4);
 
-                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                objectBuilder.add("code", code);
-                objectBuilder.add("description", description);
-                objectBuilder.add("qty", qty);
-                objectBuilder.add("unitPrice", unitPrice);
-                arrayBuilder.add(objectBuilder.build());
+                        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                        objectBuilder.add("code", code);
+                        objectBuilder.add("description", description);
+                        objectBuilder.add("qty", qty);
+                        objectBuilder.add("unitPrice", unitPrice);
+                        arrayBuilder.add(objectBuilder.build());
+                    }
+                    resp.setContentType("application/json");
+                    resp.getWriter().print(arrayBuilder.build());
+
+                    break;
+
+                case "getNewId":
+                    PreparedStatement pstm1 = connection.prepareStatement("select id from items order by id desc limit 1");
+                    ResultSet rst1 = pstm1.executeQuery();
+                    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+                    JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
+                    while (rst1.next()) {
+                        String id = rst1.getString("id");
+                        int newItemId=Integer.parseInt(id.replace("I0-",""))+1;
+                        arrayBuilder2.add(newItemId);
+                    }
+                    resp.setContentType("application/json");
+                    resp.getWriter().print(arrayBuilder2.build());
+
+                    break;
             }
-            resp.setContentType("application/json");
-            resp.getWriter().print(arrayBuilder.build());
 
 
         } catch (ClassNotFoundException e) {
@@ -69,8 +93,6 @@ public class ItemServlet extends HttpServlet {
             forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shop", "root", "1234");
 
-           /* switch (option) {*/
-                /*case "add":*/
                     PreparedStatement pstm = connection.prepareStatement("INSERT INTO items values(?,?,?,?)");
                     pstm.setObject(1, code);
                     pstm.setObject(2, itemName);
@@ -91,27 +113,7 @@ public class ItemServlet extends HttpServlet {
                         resp.setStatus(400);
                         resp.getWriter().print(objectBuilder.build());
                     }
-         /*           break;*/
-               /* case "delete":
-                    PreparedStatement pstm2 = connection.prepareStatement("delete from item where code=?");
-                    pstm2.setObject(1, code);
-                    if (pstm2.executeUpdate() > 0) {
-                        resp.getWriter().println("Item Deleted..!");
 
-                    }
-                    break;
-                case "update":
-                    PreparedStatement pstm3 = connection.prepareStatement("update item set description=?,qtyOnHand=?,unitPrice=? where code=?");
-                    pstm3.setObject(1, itemName);
-                    pstm3.setObject(2, qty);
-                    pstm3.setObject(3, unitPrice);
-                    pstm3.setObject(4, code);
-                    if (pstm3.executeUpdate() > 0) {
-                        resp.getWriter().println("Item Updated..!");
-
-                    }
-                    break;*/
-          /*  }*/
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
