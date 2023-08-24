@@ -1,5 +1,6 @@
 package lk.ijse.jsp.servlet;
 
+
 import lk.ijse.jsp.db.DBConnection;
 import lk.ijse.jsp.dto.CustomerDTO;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Class.forName;
 
@@ -33,58 +35,53 @@ public class CustomerServlet extends HttpServlet {
 
             forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shop", "root", "1234");
-            PreparedStatement pstm = connection.prepareStatement("select * from customer");
-            ResultSet rst = pstm.executeQuery();
-            resp.addHeader("Access-Control-Allow-Origin", "*");
-          /*  String JSON = "[";
-            while (rst.next()) {
-                String customer="{";
-                String id = rst.getString(1);
-                String name = rst.getString(2);
-                String address = rst.getString(3);
-                customer+="\"id\":\""+id+"\",";
-                customer+="\"name\":\""+name+"\",";
-                customer+="\"address\":\""+address+"\"";
-                customer+="}";
-                JSON+=customer+",";
+
+            String option = req.getParameter("option");
+
+            switch (option) {
+                case "GetAll":
+                    PreparedStatement pstm = connection.prepareStatement("select * from customer");
+                    ResultSet rst = pstm.executeQuery();
+                    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                    while (rst.next()) {
+                        String id = rst.getString(1);
+                        String name = rst.getString(2);
+                        String address = rst.getString(3);
+                        String contact = rst.getString(4);
+
+                        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                        objectBuilder.add("id", id);
+                        objectBuilder.add("name", name);
+                        objectBuilder.add("address", address);
+                        objectBuilder.add("contact", contact);
+                        arrayBuilder.add(objectBuilder.build());
+                    }
+                    resp.setContentType("application/json");
+                    resp.getWriter().print(arrayBuilder.build());
+                    break;
+
+                case "GetIds":
+                    PreparedStatement pstm2 = connection.prepareStatement("SELECT Id FROM customer ORDER BY Id DESC LIMIT 1;");
+                    ResultSet rst2 = pstm2.executeQuery();
+                    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+                    JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
+                    while (rst2.next()) {
+                        String id = rst2.getString("id");
+                        int newCustomerId=Integer.parseInt(id.replace("C0-",""))+1;
+                        arrayBuilder2.add(newCustomerId);
+                    }
+                    resp.setContentType("application/json");
+                    resp.getWriter().print(arrayBuilder2.build());
+
+                    break;
+
             }
-            JSON=JSON.substring(0,JSON.length()-1);
-            JSON+="]";
-            resp.setContentType("application/json");
-            resp.getWriter().print(JSON);*/
-
-            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            while (rst.next()){
-                String id = rst.getString(1);
-                String name = rst.getString(2);
-                String address = rst.getString(3);
-                String contact=rst.getString(4);
-
-                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                objectBuilder.add("id",id);
-                objectBuilder.add("name",name);
-                objectBuilder.add("address",address);
-                objectBuilder.add("contact",contact);
-                arrayBuilder.add(objectBuilder.build());
-            }
-            resp.setContentType("application/json");
-            resp.getWriter().print(arrayBuilder.build());
-
-            /*ArrayList<CustomerDTO> allCustomers = new ArrayList<>();
-
-            while (rst.next()) {
-                String id = rst.getString(1);
-                String name = rst.getString(2);
-                String address = rst.getString(3);
-                allCustomers.add(new CustomerDTO(id, name, address));
-            }
-
-            req.setAttribute("keyOne", allCustomers);
-
-            req.getRequestDispatcher("customer.html").forward(req, resp);
 
 
-*/
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
@@ -120,29 +117,29 @@ public class CustomerServlet extends HttpServlet {
 
           /*  switch (option) {
                 case "add":*/
-                    PreparedStatement pstm = connection.prepareStatement("Insert into customer values(?,?,?,?)");
+            PreparedStatement pstm = connection.prepareStatement("Insert into customer values(?,?,?,?)");
             resp.addHeader("Access-Control-Allow-Origin", "*");
 
-                    pstm.setObject(1, cusID);
-                    pstm.setObject(2, cusName);
-                    pstm.setObject(3, cusAddress);
-                    pstm.setObject(4, cusSalary);
+            pstm.setObject(1, cusID);
+            pstm.setObject(2, cusName);
+            pstm.setObject(3, cusAddress);
+            pstm.setObject(4, cusSalary);
 
-                    if (pstm.executeUpdate() > 0) {
-                       /* resp.getWriter().println("Customer Added..!");*/
-                        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                        objectBuilder.add("status","success");
-                        objectBuilder.add("message","Customer Added..!");
-                        resp.setContentType("application/json");
-                        resp.getWriter().print(objectBuilder.build());
+            if (pstm.executeUpdate() > 0) {
+                /* resp.getWriter().println("Customer Added..!");*/
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("status", "success");
+                objectBuilder.add("message", "Customer Added..!");
+                resp.setContentType("application/json");
+                resp.getWriter().print(objectBuilder.build());
 
 
-                    }else {
-                        resp.getWriter().println("Customer Not Added..!");
-                        String jsonResponse = "{\"status\": \"fail\", \"message\": \"Customer Not Added..!\"}";
-                        resp.getWriter().println(jsonResponse);
-                    }
-                  /*  break;*/
+            } else {
+                resp.getWriter().println("Customer Not Added..!");
+                String jsonResponse = "{\"status\": \"fail\", \"message\": \"Customer Not Added..!\"}";
+                resp.getWriter().println(jsonResponse);
+            }
+            /*  break;*/
               /*  case "delete":
                     PreparedStatement pstm2 = connection.prepareStatement("delete from Customer where id=?");
                     pstm2.setObject(1, cusID);
@@ -159,16 +156,16 @@ public class CustomerServlet extends HttpServlet {
                         resp.getWriter().println("Customer Updated..!");
                     }
                     break;*/
-      /*      }*/
+            /*      }*/
 
 
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            objectBuilder.add("status","success");
-            objectBuilder.add("message",e.getMessage());
-            objectBuilder.add("data",e.getErrorCode());
+            objectBuilder.add("status", "success");
+            objectBuilder.add("message", e.getMessage());
+            objectBuilder.add("data", e.getErrorCode());
             resp.setContentType("application/json");
             resp.setStatus(400);
             resp.getWriter().print(objectBuilder.build());
@@ -193,43 +190,43 @@ public class CustomerServlet extends HttpServlet {
         String cusName = jsonObject.getString("cusName");
         String cusAddress = jsonObject.getString("cusAddress");
         String contact = jsonObject.getString("contact");
-        System.out.println(cusID+" "+cusName+" "+cusAddress+" "+contact);
+        System.out.println(cusID + " " + cusName + " " + cusAddress + " " + contact);
 
         try {
             forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shop", "root", "1234");
 
 
-                PreparedStatement pstm3 = connection.prepareStatement("update customer set name=?, address=?, contact=? where id=?");
+            PreparedStatement pstm3 = connection.prepareStatement("update customer set name=?, address=?, contact=? where id=?");
 
-                pstm3.setObject(1, cusName);
-                pstm3.setObject(2, cusAddress);
-                pstm3.setObject(3, contact);
-                pstm3.setObject(4, cusID);
-                System.out.println("sql" + pstm3);
-                if (pstm3.executeUpdate() > 0) {
-                    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                    objectBuilder.add("status", "success");
-                    objectBuilder.add("message", "Customer Updated..!");
-                    resp.setContentType("application/json");
-                    resp.getWriter().print(objectBuilder.build());
+            pstm3.setObject(1, cusName);
+            pstm3.setObject(2, cusAddress);
+            pstm3.setObject(3, contact);
+            pstm3.setObject(4, cusID);
+            System.out.println("sql" + pstm3);
+            if (pstm3.executeUpdate() > 0) {
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("status", "success");
+                objectBuilder.add("message", "Customer Updated..!");
+                resp.setContentType("application/json");
+                resp.getWriter().print(objectBuilder.build());
 
-                } else {
-                    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                    objectBuilder.add("status", "fail");
-                    objectBuilder.add("message", "Customer Not Updated..!");
-                    resp.setContentType("application/json");
-                    resp.setStatus(400);
-                    resp.getWriter().print(objectBuilder.build());
-                }
+            } else {
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("status", "fail");
+                objectBuilder.add("message", "Customer Not Updated..!");
+                resp.setContentType("application/json");
+                resp.setStatus(400);
+                resp.getWriter().print(objectBuilder.build());
+            }
 
-        }catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            objectBuilder.add("status","success");
-            objectBuilder.add("message",e.getMessage());
-            objectBuilder.add("data",e.getErrorCode());
+            objectBuilder.add("status", "success");
+            objectBuilder.add("message", e.getMessage());
+            objectBuilder.add("data", e.getErrorCode());
             resp.setContentType("application/json");
             resp.setStatus(400);
             resp.getWriter().print(objectBuilder.build());

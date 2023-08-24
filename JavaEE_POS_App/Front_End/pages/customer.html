@@ -115,10 +115,11 @@
         /*<!--send ajax request to the customer servlet using jQuery-->*/
         $("#tblCustomer").empty();
         $.ajax({
-            url: "http://localhost:8081/Jsonp9/pages/customer",
+            url: "http://localhost:8081/Jsonp9/pages/customer?option=GetAll",
+            method: "GET",
 
             success: function (cus) {
-
+generateCustomerId();
                 /*<!--when the response received catch it and set it to the table-->*/
 
                 for (let i = 0; i < cus.length; i++) {
@@ -134,6 +135,22 @@
         });
     }
 
+    function generateCustomerId(){
+      $("#txtCustomerID").val("C0-001");
+        $.ajax({
+            url: "http://localhost:8081/Jsonp9/pages/customer?option=GetIds",
+            method: "GET",
+
+            success: function (resp) {
+                $("#txtCustomerID").val("C0-00"+resp);
+            }
+        });
+
+    }
+
+   $("#btnGetAll").click(function () {
+        generateCustomerId();
+    });
     /*<!--bind a event on btn save btn-->*/
 
     $("#btnCustomer").click(function () {
@@ -273,6 +290,7 @@
     });
 
     function bindClickEvent() {
+
       $("#tblCustomer>tr").on('click', function () {
         let id = $(this).children().eq(0).text();
         let name = $(this).children().eq(1).text();
