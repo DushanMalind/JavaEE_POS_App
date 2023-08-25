@@ -433,8 +433,81 @@ $("#btnAddToTable").click(function (){
 
   $("#orderItemCode").focus();
 
+  updateQtyOnHandRow(itemCode,itemQty);
 
 });
+
+/*$("#btnSubmitOrder").click(function (){
+
+  let orderId = $("#txtOrderID").val();
+  let orderDate = $("#txtDate").val();
+  let customerId = $("#orderCustomerID").val();
+  let total = $("#total").text();
+  let discount = $("#txtDiscount").val();
+  let cash = $("#txtCash").val();
+  let balance = $("#txtBalance").val();
+
+  let orderDetails = [];
+
+  $("#orderTable tr").each(function () {
+    let code = $(this).find("td:nth-child(1)").text();
+    let qty = $(this).find("td:nth-child(4)").text();
+    let unitPrice = $(this).find("td:nth-child(3)").text();
+
+    let orderDetail = {
+      orderId: orderId,
+      itemCode: code,
+      qty: qty,
+      unitPrice: unitPrice
+    };
+
+    orderDetails.push(orderDetail);
+  });
+
+  let order = {
+    orderId: orderId,
+    orderDate: orderDate,
+    customerId: customerId,
+    total: total,
+    discount: discount,
+    cash: cash,
+    balance: balance,
+    orderDetails: orderDetails
+  };
+
+  $.ajax({
+    url: "http://localhost:8081/Jsonp9/pages/order",
+    method: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(order),
+    success: function (resp) {
+      if (resp) {
+        alert("Order has been saved successfully");
+      } else {
+        alert("Failed to save the order");
+      }
+    },
+    error: function (ob, statusText, error) {
+      alert(error);
+    }
+  });
+
+});*/
+function updateQtyOnHandRow(code,sellQty){
+$.ajax({
+  url: "http://localhost:8081/Jsonp9/pages/item?option=search&code=" +code,
+  method: "GET",
+  success: function (resp) {
+    $("#orderQTYOnHand").val(resp.qty-sellQty);
+    for(let code of resp){
+
+      //$("#orderQTYOnHand").val(code.qty);
+    }
+  },
+  error: function (ob, statusText, error) {
+  }
+});
+}
 
 function calculateTotal(){
   let total = 0;
