@@ -1,7 +1,7 @@
 var itemObject = {
-    itemId: "",
+    id: "",
     descriptions: "",
-    unitprice: "",
+   unitPrice: "",
     qty: ""
 
 }

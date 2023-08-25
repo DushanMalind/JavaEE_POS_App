@@ -108,7 +108,7 @@
   /* <!--bind a event on btn GetAll btn-->*/
   // let baseUrl = "http://localhost:8081/shop/";
   /*let formData = $("#customerFrom").serialize();*/
-
+   var customersArray=[];
   getAllCustomer();
 
   function getAllCustomer() {
@@ -121,7 +121,7 @@
       success: function (cus) {
         generateCustomerId();
         /*<!--when the response received catch it and set it to the table-->*/
-
+         customersArray = cus.data;
         for (let i = 0; i < cus.length; i++) {
           let id = cus[i].id;
           let name = cus[i].name;
@@ -147,7 +147,30 @@
     });
 
   }
+searchCustomer();
 
+  var search = false;
+  function searchCustomer() {
+   // let id = $("#txtCustomerID").val();
+    $.ajax({
+      url: "http://localhost:8081/Jsonp9/pages/customer?option=search&cusID=" + $("#txtCustomerID").val(),
+      method: "GET",
+
+      success: function (resp) {
+        if (resp.id==$("#txtCustomerID").val());
+        search=true;
+        $("#txtCustomerName").val(resp.name);
+        $("#txtCustomerAddress").val(resp.address);
+        $("#txtCustomerSalary").val(resp.contact);
+      },
+      error: function (error) {
+        //  alert(error.responseJSON.message);
+        search=false;
+        alert(error.responseJSON.message)
+        //console.log(error);
+      }
+    });
+  }
 
   function clearData(){
     //$("#txtCustomerID").val("");

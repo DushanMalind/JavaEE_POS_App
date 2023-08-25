@@ -63,7 +63,7 @@ public class CustomerServlet extends HttpServlet {
                     break;
 
                 case "GetIds":
-                    PreparedStatement pstm2 = connection.prepareStatement("SELECT Id FROM customer ORDER BY Id DESC LIMIT 1;");
+                    PreparedStatement pstm2 = connection.prepareStatement("SELECT id FROM customer ORDER BY id DESC LIMIT 1;");
                     ResultSet rst2 = pstm2.executeQuery();
                     resp.addHeader("Access-Control-Allow-Origin", "*");
 
@@ -78,6 +78,28 @@ public class CustomerServlet extends HttpServlet {
                     resp.setContentType("application/json");
                     resp.getWriter().print(arrayBuilder2.build());
 
+                    break;
+
+                case "search":
+                    PreparedStatement pstm3 = connection.prepareStatement("select * from customer where id=?");
+                    pstm3.setObject(1, req.getParameter("cusID"));
+                    ResultSet rst3 = pstm3.executeQuery();
+                    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+                    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                    if (rst3.next()) {
+                        String id = rst3.getString(1);
+                        String name = rst3.getString(2);
+                        String address = rst3.getString(3);
+                        String contact = rst3.getString(4);
+
+                        objectBuilder.add("id", id);
+                        objectBuilder.add("name", name);
+                        objectBuilder.add("address", address);
+                        objectBuilder.add("contact", contact);
+                    }
+                    resp.setContentType("application/json");
+                    resp.getWriter().print(objectBuilder.build());
                     break;
 
             }
@@ -174,6 +196,15 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
+    /*@Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Content-type", "application/json");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        System.out.println("Hello");
+        //resp.addHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+        resp.getWriter().println("Req");
+    }*/
+
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         /*String cusID = req.getParameter("cusID");
@@ -217,6 +248,7 @@ public class CustomerServlet extends HttpServlet {
                 objectBuilder.add("status", "fail");
                 objectBuilder.add("message", "Customer Not Updated..!");
                 resp.setContentType("application/json");
+                //resp.addHeader("Content-type", "application/json");
                 resp.setStatus(400);
                 resp.getWriter().print(objectBuilder.build());
             }

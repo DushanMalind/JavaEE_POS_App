@@ -59,9 +59,8 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label>Customer :</label>
-                                            <select class="form-control" id="selectCusID">
-                                                <option value="1">A</option>
-                                                <option value="2">B</option>
+                                          <select class="form-control" id="selectCusID">
+                                            <option>Select</option>
                                             </select>
                                             <span class="control-error"
                                                   id="cus-empty-error"></span>
@@ -107,7 +106,9 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label>Item :</label>
-                                            <select class="form-control" id="selectItemCode"></select>
+                                            <select class="form-control" id="selectItemCode">
+                                              <option>Select</option>
+                                            </select>
                                             <span class="control-error"
                                                   id="item-empty-error"></span>
                                         </div>
@@ -115,25 +116,25 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label>Item Code :</label>
-                                            <input class="form-control" id="txtItemCode" type="text">
+                                            <input class="form-control" id="orderItemCode" type="text">
                                         </div>
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
                                             <label>Item Name :</label>
-                                            <input class="form-control" id="txtItemDescription" type="text">
+                                            <input class="form-control" id="orderItemDescription" type="text">
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label class="">Price :</label>
-                                            <input class="form-control" id="txtItemPrice" type="text">
+                                            <input class="form-control" id="orderItemPrice" type="text">
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class="form-group">
                                             <label class="">QtyOnH :</label>
-                                            <input class="form-control" id="txtQTYOnHand" type="text">
+                                            <input class="form-control" id="orderQTYOnHand" type="text">
                                         </div>
                                     </div>
                                     <hr>
@@ -234,6 +235,162 @@
 
 
 <script>
+  var genarateOrderId=0;
+
+  $("#txtOrderID").val('0-00'+(genarateOrderId+=1));
+
+
+/*  $("#txtCash").on('keyup',function () {
+    var cash = $("#txtCash").val();
+    var total = $("#total").text();
+    var discount = $("#txtDiscount").val();
+    var balance = cash - (total - discount);
+    $("#txtBalance").val(balance);
+  });*/
+
+
+/*
+loadCustomerIds();
+
+function loadCustomerIds(){
+  $("#selectCusID").empty();
+  $("#selectCusID").append($("<option></option>").attr("value", 0).text("Select ID"));
+
+  var countCustomerId=1;
+
+  $.ajax({
+    url: "http://localhost:8081/Jsonp9/pages/customer?option=GetAll",
+    method: "GET",
+    success: function (resp) {
+      for(let ids of resp){
+        $("#selectCusID").append("<option></option>").attr("value",countCustomerId).text(ids.id);
+        countCustomerId++;
+        console.log(countCustomerId);
+      }
+    },
+    error: function (ob, statusText, error) {
+    }
+  });
+}
+  $("#selectCusID").click(function () {
+   loardCustomer();
+  });
+
+function loardCustomer(){
+  $.ajax({
+    url: "http://localhost:8081/Jsonp9/pages/customer?option=search&cusID=" + $("#selectCusID option:selected").text(),
+    method: "GET",
+    success: function (response) {
+      $("#orderCustomerID").val(response.id);
+      $("#orderCustomerName").val(response.name);
+      $("#orderCustomerSalary").val(response.contact);
+      $("#orderCustomerAddress").val(response.address);
+
+    },
+    error: function (ob, statusText, error) {
+    }
+  });
+}
+*/
+
+  function loadCustomerIds(){
+    $("#selectCusID").empty();
+    $("#selectCusID").append($("<option></option>").attr("value", 0).text("Select ID"));
+
+    var countCustomerId = 1;
+
+    $.ajax({
+      url: "http://localhost:8081/Jsonp9/pages/customer?option=GetAll",
+      method: "GET",
+      success: function (resp) {
+        for(let ids of resp){
+          $("#selectCusID").append($("<option></option>").attr("value", countCustomerId).text(ids.id));
+          countCustomerId++;
+          console.log(countCustomerId);
+        }
+
+        // Bind the event after options are loaded
+        $("#selectCusID").click(function () {
+          loardCustomer();
+        });
+      },
+      error: function (ob, statusText, error) {
+      }
+    });
+  }
+
+  function loardCustomer(){
+    $.ajax({
+      url: "http://localhost:8081/Jsonp9/pages/customer?option=search&cusID=" + $("#selectCusID option:selected").text(),
+      method: "GET",
+      success: function (response) {
+        $("#orderCustomerID").val(response.id);
+        $("#orderCustomerName").val(response.name);
+        $("#orderCustomerSalary").val(response.contact);
+        $("#orderCustomerAddress").val(response.address);
+      },
+      error: function (ob, statusText, error) {
+      }
+    });
+  }
+
+  // Call the function to start loading customer IDs
+  loadCustomerIds();
+
+
+
+
+function loardItemIds(){
+  $("#selectItemCode").empty();
+  $("#selectItemCode").append($("<option></option>").attr("value", 0).text("Select ID"));
+
+  var countItemId=1;
+
+  $.ajax({
+    url: "http://localhost:8081/Jsonp9/pages/item?option=getAll",
+    method: "GET",
+    success: function (resp) {
+      for(let code of resp){
+        $("#selectItemCode").append($("<option></option>").attr("value", countItemId).text(code.code));
+        countItemId++;
+        console.log(countItemId);
+      }
+      // Bind the event after options are loaded
+      $("#selectItemCode").click(function () {
+        loardItems();
+
+      });
+    },
+    error: function (ob, statusText, error) {
+    }
+  });
+
+}
+
+function loardItems(){
+  $.ajax({
+    url: "http://localhost:8081/Jsonp9/pages/item?option=search&code=" + $("#selectItemCode option:selected").text(),
+    method: "GET",
+    success: function (resp) {
+      $("#orderItemCode").val(resp.code);
+      $("#orderItemDescription").val(resp.description);
+      $("#orderItemPrice").val(resp.unitPrice);
+      $("#orderQTYOnHand").val(resp.qty);
+
+      console.log(resp);
+
+
+    },
+    error: function (ob, statusText, error) {
+    }
+  });
+}
+
+  loardItemIds();
+
+
+
+
 
 
 

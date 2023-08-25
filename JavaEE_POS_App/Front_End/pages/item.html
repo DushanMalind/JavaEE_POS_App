@@ -88,14 +88,16 @@
 <script>
 
   getAllItems();
-
+  var itemArray=[];
   function getAllItems() {
     /*$("#GetAll").click(function () {*/
     $("#tblItem").empty();
 
     $.ajax({
       url: "http://localhost:8081/Jsonp9/pages/item?option=getAll",
+      method: "GET",
       success: function (data) {
+        itemArray=data.data;
         generateNewIdItem();
         for (let i = 0; i < data.length; i++) {
           let code = data[i].code;
@@ -109,6 +111,9 @@
     });
     /*});*/
   }
+
+
+
 
 
   function generateNewIdItem(){
