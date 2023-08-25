@@ -377,7 +377,7 @@ function loardItems(){
       $("#orderItemPrice").val(resp.unitPrice);
       $("#orderQTYOnHand").val(resp.qty);
 
-      console.log(resp);
+     // console.log(resp);
 
 
     },
@@ -389,7 +389,90 @@ function loardItems(){
   loardItemIds();
 
 
+$("#btnAddToTable").click(function (){
+  let itemCode = $("#orderItemCode").val();
+  let itemDescription = $("#orderItemDescription").val();
+  let itemPrice = $("#orderItemPrice").val();
+  let itemQty = $("#txtQty").val();
 
+  let total = itemPrice * itemQty;
+
+  let text="add to cart this item";
+
+  if (confirm(text)==true){
+    let row = `<tr>
+                <td>${itemCode}</td>
+                <td>${itemDescription}</td>
+                <td>${itemPrice}</td>
+                <td>${itemQty}</td>
+                <td>${total}</td>
+            </tr>`;
+
+    $("#orderTable").append(row);
+  }
+
+
+
+  calculateTotal();
+
+
+  $("#orderItemCode").val("");
+  $("#orderItemDescription").val("");
+  $("#orderItemPrice").val("");
+  $("#orderQTYOnHand").val("");
+  $("#txtQty").val("");
+
+  $("#orderCustomerID").focus();
+
+  $("#orderCustomerID").val("");
+  $("#orderCustomerName").val("");
+  $("#orderCustomerSalary").val("");
+  $("#orderCustomerAddress").val("");
+
+
+
+  $("#orderItemCode").focus();
+
+
+});
+
+function calculateTotal(){
+  let total = 0;
+  $("#orderTable tr td:nth-child(5)").each(function () {
+    total += parseFloat($(this).text());
+  });
+  $("#total").text(total);
+  $("#subtotal").text(total);
+
+  $("#txtCash").on('keyup',function () {
+    var cash = $("#txtCash").val();
+    var total = $("#total").text();
+    var discount = $("#txtDiscount").val();
+    var balance = cash - (total - discount);
+    $("#txtBalance").val(balance);
+  });
+
+  $("#txtDiscount").on('keyup',function () {
+    var cash = $("#txtCash").val();
+    var total = $("#total").text();
+    var discount = $("#txtDiscount").val();
+    var balance = cash - (total - discount);
+    $("#txtBalance").val(balance);
+
+    $("#subtotal").text(total - discount);
+  });
+
+  /*$("#subtotal").on('keyup',function () {
+    var cash = $("#txtCash").val();
+    var total = $("#total").text();
+    var discount = $("#txtDiscount").val();
+    var balance = cash - (total - discount);
+    $("#txtBalance").val(balance);
+
+
+  });*/
+
+}
 
 
 
